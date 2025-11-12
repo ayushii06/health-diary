@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:16
+    container_name: health-diary-db
+    restart: always
+    environment:
+      POSTGRES_USER: ayushi
+      POSTGRES_PASSWORD: dev123
+      POSTGRES_DB: health_diary
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  adminer:
+    image: adminer
+    container_name: db-adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
