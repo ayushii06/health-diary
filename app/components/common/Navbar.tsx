@@ -3,16 +3,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import logo from '../../../public/logo.png'
 import { useRouter } from "next/navigation";
-// import { useSession } from "next-auth/react";
-import credit from '../../../public/credit.png'
-import king from '../../../public/king.png'
-import avatar from '../../../public/user.svg'
-import { signOut } from "next-auth/react";
-import { Sidebar } from "lucide-react";
-import Dropdown from "./Dropdown";
 import { Button } from "../ui/button";
 import {
-  ClerkProvider,
   SignInButton,
   SignUpButton,
   SignedIn,
@@ -55,34 +47,7 @@ function Navbar({ className }: { className?: string }) {
               </button>
               <UserButton />
             </SignedIn>
-          </header>
-      {/* <div className="md:flex hidden items-center gap-2">
-        {isAuthenticated ? (
-          <>
-              <div className="rounded-sm bg-green-600 px-4 cursor-pointer  py-2 text-xs font-bold flex justify-center items-center gap-2">
-                <p className="">View Trend</p>
-              </div>
-            
-               
-            <Image src={image ? image : avatar} width={12} height={12} className="cursor-pointer rounded-full w-8" onClick={() => setShowMenu(!showMenu)} alt="avatar" />
-            {!showMenu && <Dropdown email={email} />}
-          </>
-        ) : (
-          <>
-            <Button
-              className="border cursor-pointer border-gray-500 px-4 py-2 rounded-sm text-sm"
-              onClick={() => {
-                router.push("/auth/login");
-              }}
-            >
-              Log In / Sign Up
-            </Button>
-           
-          </>
-        )}
-      </div> */}
-
-      
+          </header>      
     </div>
   );
 }
