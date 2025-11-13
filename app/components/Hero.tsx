@@ -38,39 +38,54 @@ function Hero() {
     );
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // inside Hero component
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    if (!level) {
-      setMessage("Please enter a valid reading!");
-      return;
-    }
+  if (!level) {
+    setMessage("Please enter a valid reading!");
+    return;
+  }
 
+  try {
+    setLoading(true);
+    setMessage("");
+
+    const res = await fetch("/api/readings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ level: Number(level), context }),
+    });
+
+    console.log("Response from /api/readings:", res);
+
+    // defensive parse
+    let data: any = null;
     try {
-      setLoading(true);
-      setMessage("");
-
-      const res = await fetch("/api/readings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ level: Number(level), context }),
-      });
-
-      if (res.ok) {
-        setMessage("✅ Reading recorded successfully!");
-        setLevel("");
-        setContext("random");
-      } else {
-        const data = await res.json();
-        setMessage(`⚠️ Failed: ${data.error || "Something went wrong"}`);
-      }
-    } catch (error) {
-      console.error("Error adding reading:", error);
-      setMessage("❌ Server error. Please try again later.");
-    } finally {
-      setLoading(false);
+      data = await res.json();
+    } catch (parseErr) {
+      console.warn("Response has no JSON body:", parseErr);
     }
-  };
+
+    console.log("Response JSON from /api/readings:", data);
+
+    if (res.ok) {
+      setMessage("✅ Reading recorded successfully!");
+      setLevel("");
+      setContext("random");
+      // optionally refresh list / router.refresh()
+    } else {
+      setMessage(`⚠️ Failed: ${data?.error ?? res.statusText ?? "Server error"}`);
+    }
+  } catch (error) {
+    console.log("Error adding reading:", error);
+    console.error("Error adding reading:", error);
+    setMessage("❌ Server error. Please try again later.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <>
@@ -78,13 +93,13 @@ function Hero() {
 
       {isSignedIn ? (
         // ✅ Signed-in user view
-        <div className="text-center pt-10">
-          <p className="text-4xl font-bold my-8">
+        <div className="text-center pt-10 px-4 sm:px-8">
+          <p className="text-3xl sm:text-4xl font-bold my-8">
             Hi {user?.firstName || "there"}, please enter your blood sugar level
           </p>
 
           <form
-            className="w-[45%] border border-gray-500 rounded-3xl px-6 py-4 text-start mx-auto space-y-8"
+            className="w-full sm:w-[80%] md:w-[60%] lg:w-[45%] border border-gray-500 rounded-3xl px-4 sm:px-6 py-6 text-start mx-auto space-y-8"
             onSubmit={handleSubmit}
           >
             <div className="space-y-2">
@@ -117,7 +132,7 @@ function Hero() {
             </div>
 
             <div className="text-center">
-              <Button type="submit">
+              <Button type="submit" className="w-full sm:w-auto">
                 {loading ? "Recording..." : "Record It"}
               </Button>
             </div>
@@ -129,14 +144,21 @@ function Hero() {
         </div>
       ) : (
         // 🚫 Not signed-in user view
-        <div className="text-center my-30">
-          <p className="text-3xl font-bold">Welcome to the Health Diary</p>
-          <p className="text-sm mb-4 max-w-md mx-auto mt-4 text-gray-600">
-            Health Diary helps you track and manage your blood sugar levels
-            effectively. Get started by signing in to record your readings and monitor
-            your health over time.
+        <div className="text-center my-20 px-4 sm:px-8">
+          <p className="text-2xl sm:text-3xl font-bold">
+            Welcome to the Health Diary
           </p>
-          <Button onClick={() => router.push("/sign-in")}>Get Started</Button>
+          <p className="text-sm sm:text-base mb-4 max-w-md mx-auto mt-4 text-gray-600 leading-relaxed">
+            Health Diary helps you track and manage your blood sugar levels
+            effectively. Get started by signing in to record your readings and
+            monitor your health over time.
+          </p>
+          <Button
+            onClick={() => router.push("/sign-in")}
+            className="w-full sm:w-auto"
+          >
+            Get Started
+          </Button>
         </div>
       )}
     </>
