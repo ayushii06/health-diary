@@ -29,23 +29,7 @@ export default function NavbarDemo() {
 }
 
 function Navbar({ className }: { className?: string }) {
-  const router = useRouter()
-
-  const [showMenu, setShowMenu] = useState(false);
-  const [open, setOpen] = useState(false);
-
-  // const { data: session, status } = useSession();
-  // console.log(session)
-  // const email = session?.user?.email
-  // const image = session?.user?.image
-
-  const isAuthenticated = status === "authenticated";
-  const isPremium = false;
-  // console.log("image source -> ", image)
-
-
-
-
+  const router = useRouter();
   return (
     <div className="bg- flex items-center  px-4 justify-between w-full text-white">
       <div className="flex items-center gap-2">
@@ -54,14 +38,21 @@ function Navbar({ className }: { className?: string }) {
       </div>
        <header className="flex justify-end items-center p-4 gap-4 h-16">
             <SignedOut>
-              <SignInButton />
-              <SignUpButton>
-                <button className="bg-[#6c47ff] text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
-                  Sign Up
+              <SignInButton>
+                <button className="cursor-pointer bg-[#11224e] text-sm px-4 py-2 rounded-sm text-[#f87b1b] ">
+                  Sign In
                 </button>
+                </SignInButton>
+              <SignUpButton>
+                <Button className="cursor-pointer">
+                  Sign Up
+                </Button>
               </SignUpButton>
             </SignedOut>
             <SignedIn>
+              <button className="cursor-pointer bg-[#11224e] hover:bg-[#0e1b3e] text-white font-normal text-sm px-4 py-2 rounded-sm" onClick={() => {router.push('/report')}}>
+                Track Report
+              </button>
               <UserButton />
             </SignedIn>
           </header>
@@ -91,42 +82,7 @@ function Navbar({ className }: { className?: string }) {
         )}
       </div> */}
 
-      <div className="md:hidden block" onClick={() => { setOpen(!open) }}>
-        <Sidebar />
-      </div>
-      {open && (
-  <div className="absolute top-0 left-0 w-full h-screen bg-black z-50 flex flex-col justify-start items-start p-6 gap-4">
-    {/* Close Button */}
-    <button onClick={() => setOpen(false)} className="text-white self-end text-xl mb-4">✕</button>
-
-
-{/*   
-    <div className="mt-6 flex flex-col gap-4 w-full">
-      {isAuthenticated ? (
-        <>
-         
-          <Image src={image ? image : avatar} width={32} height={32} className="rounded-full cursor-pointer" alt="avatar" onClick={() => setShowMenu(!showMenu)} />
-          {!showMenu && <Dropdown email={email} />}
-        </>
-      ) : (
-        <>
-          <button
-            className="border border-gray-500 px-4 py-2 rounded text-sm text-white"
-            onClick={() => { router.push("/auth/login"); setOpen(false); }}
-          >
-            Sign In
-          </button>
-          <button
-            className="px-4 py-2 rounded text-sm font-semibold bg-blue-600 text-white"
-            onClick={() => { router.push("/auth/signup"); setOpen(false); }}
-          >
-            Get Started
-          </button>
-        </>
-      )}
-    </div> */}
-  </div>
-)}
+      
     </div>
   );
 }
