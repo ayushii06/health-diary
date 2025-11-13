@@ -3,8 +3,8 @@ import postgres from 'postgres';
 import { assignLabel } from '../api/readings/utils';
 import { Reading, Context } from '../types/types';
 
-const sql = postgres(process.env.DATABASE_URL as string, {
-  ssl: false, // local docker -> false
+export const sql = postgres(process.env.DATABASE_URL!, {
+  ssl: "require",
 });
 
 type ReadingInsertData = Omit<Reading, 'id' | 'date' | 'time' | 'label' | 'created_at' >;
